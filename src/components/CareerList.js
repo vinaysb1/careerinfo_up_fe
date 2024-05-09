@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import careers from "../mockdata/data";
-import "./CareerList.css"
+import "./CareerList.css"; // Import CSS file
 
 const CareerList = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -13,27 +13,49 @@ const CareerList = () => {
         setSearchTerm("");
     };
 
-    const filteredCareers = careers.filter((career) =>
-        career.title.toLowerCase().includes(searchTerm.toLowerCase()) || career.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredCareers = careers.filter(career => {
+        const searchTokens = searchTerm.toLowerCase().split(/\s+/);
+        return searchTokens.some(token => {
+            return (
+                career.title.toLowerCase().includes(token) ||
+                career.description.toLowerCase().includes(token)
+            );
+        });
+    }).sort((a, b) => {
+        const aTitle = a.title.toLowerCase();
+        const bTitle = b.title.toLowerCase();
+        const aIndex = aTitle.indexOf(searchTerm.toLowerCase());
+        const bIndex = bTitle.indexOf(searchTerm.toLowerCase());
+
+        // Sort by full token match first
+        if (aIndex === 0 && bIndex !== 0) {
+            return -1;
+        } else if (bIndex === 0 && aIndex !== 0) {
+            return 1;
+        }
+
+        // Then sort alphabetically
+        return aTitle.localeCompare(bTitle);
+    });
 
     return (
         <div>
-            <h2>Careers</h2>
-            <div style={{ marginBottom: "10px" }}>
+            <div className="search-container">
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={handleSearchChange}
                     placeholder="Search careers..."
+                    className="search-input"
                 />
                 {searchTerm && (
-                    <button onClick={handleClearSearch}>
+                    <button onClick={handleClearSearch} className="clear-button">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             width="24"
                             height="24"
+                            className="clear-icon"
                         >
                             <path
                                 fill="none"
