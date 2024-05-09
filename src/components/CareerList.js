@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import careers from "../mockdata/data";
 import "./CareerList.css"; // Import CSS file
+import CareerCard from "./CareerCard";
 
 const CareerList = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +40,7 @@ const CareerList = () => {
     });
 
     return (
-        <div>
+        <div className="career-list">
             <div className="search-container">
                 <input
                     type="text"
@@ -69,13 +70,12 @@ const CareerList = () => {
                     </button>
                 )}
             </div>
-            <ol>
+            <div className="card-container">
                 {filteredCareers.map((career) => (
-                    <li key={career.id}>
-                        {career.title} : {career.description}
-                    </li>
+                    <CareerCard key={career.id} career={career} />
                 ))}
-            </ol>
+            </div>
+
         </div>
     );
 };
