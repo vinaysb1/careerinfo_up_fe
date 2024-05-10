@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import careers from "../mockdata/data";
 import "./CareerList.css"; // Import CSS file
 import CareerCard from "./CareerCard";
 
 const CareerList = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [isSticky, setIsSticky] = useState(false);
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -57,9 +58,25 @@ const CareerList = () => {
         return aTitle.localeCompare(bTitle);
     });
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;
+            if (offset > 100) {
+                setIsSticky(true);
+            } else {
+                setIsSticky(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
-        <div className="career-list">
+        <div className={`career-list-container ${isSticky ? 'sticky' : ''}`}>
             <div className="search-container">
                 <input
                     type="text"
@@ -94,7 +111,6 @@ const CareerList = () => {
                     <CareerCard key={career.id} career={career} />
                 ))}
             </div>
-
         </div>
     );
 };

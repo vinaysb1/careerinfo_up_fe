@@ -81,3 +81,50 @@
         right: 10px;
     }
 }
+
+.career-list-container {
+    padding: 20px;
+}
+
+.search-container {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1000;
+    padding: 10px;
+}
+
+.sticky .search-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.clear-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.clear-icon {
+    fill: rgba(0, 0, 0, .54);
+    width: 24px;
+    height: 24px;
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .card-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
