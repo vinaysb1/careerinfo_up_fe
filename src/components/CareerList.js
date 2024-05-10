@@ -25,19 +25,38 @@ const CareerList = () => {
     }).sort((a, b) => {
         const aTitle = a.title.toLowerCase();
         const bTitle = b.title.toLowerCase();
-        const aIndex = aTitle.indexOf(searchTerm.toLowerCase());
-        const bIndex = bTitle.indexOf(searchTerm.toLowerCase());
+        const searchTokens = searchTerm.toLowerCase().split(/\s+/);
 
-        // Sort by full token match first
-        if (aIndex === 0 && bIndex !== 0) {
+        // Calculate the index of the first appearance of each search token in the titles
+        const aIndices = searchTokens.map(token => aTitle.indexOf(token));
+        const bIndices = searchTokens.map(token => bTitle.indexOf(token));
+
+        // Compare the indices of the first appearance of search tokens in each title
+        for (let i = 0; i < searchTokens.length; i++) {
+            if (aIndices[i] !== -1 && bIndices[i] === -1) {
+                return -1;
+            } else if (aIndices[i] === -1 && bIndices[i] !== -1) {
+                return 1;
+            } else if (aIndices[i] !== -1 && bIndices[i] !== -1) {
+                if (aIndices[i] < bIndices[i]) {
+                    return -1;
+                } else if (aIndices[i] > bIndices[i]) {
+                    return 1;
+                }
+            }
+        }
+
+        // If all tokens are not found in one title but found in the other, sort based on length
+        if (aIndices.every(index => index === -1) && bIndices.some(index => index !== -1)) {
             return -1;
-        } else if (bIndex === 0 && aIndex !== 0) {
+        } else if (bIndices.every(index => index === -1) && aIndices.some(index => index !== -1)) {
             return 1;
         }
 
-        // Then sort alphabetically
+        // Then sort alphabetically if tokens are not found in either title
         return aTitle.localeCompare(bTitle);
     });
+
 
     return (
         <div className="career-list">
