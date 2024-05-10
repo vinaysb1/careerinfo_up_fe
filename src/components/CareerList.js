@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import careers from "../mockdata/data";
+// import careers from "../mockdata/data";
+import { careersWithEducation as careers } from "../mockdata/segregated_data";
 import "./CareerList.css"; // Import CSS file
 import CareerCard from "./CareerCard";
 
@@ -20,7 +21,8 @@ const CareerList = () => {
         return searchTokens.some(token => {
             return (
                 career.title.toLowerCase().includes(token) ||
-                career.description.toLowerCase().includes(token)
+                career.description.toLowerCase().includes(token) ||
+                (career.education && Object.values(career.education).flat().some(degree => degree.toLowerCase().includes(token)))
             );
         });
     }).sort((a, b) => {
@@ -107,9 +109,13 @@ const CareerList = () => {
                 )}
             </div>
             <div className="card-container">
-                {filteredCareers.map((career) => (
-                    <CareerCard key={career.id} career={career} />
-                ))}
+                {filteredCareers.length === 0 ? (
+                    <div>No results found, please try again</div>
+                ) : (
+                    filteredCareers.map((career) => (
+                        <CareerCard key={career.id} career={career} />
+                    ))
+                )}
             </div>
         </div>
     );
